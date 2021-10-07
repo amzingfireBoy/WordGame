@@ -9,7 +9,7 @@ HP=10
 HPLimit=10
 BonusHPLimit=0
 MP=10
-MPLimit=5
+MPLimit=10
 BonusMPLimit=0
 TrueStr=0
 TrueAgl=0
@@ -124,22 +124,22 @@ def Talk():
     print('')
     print('You are in town sqare')
     print('What would you like to talk about?')
-    print("""    Monsters
-    Healing 
-    Pray
-    Type 'Back' to go back""")
+    print("""    1-Monsters
+    2-Healing 
+    3-Pray
+    4-Go back to town""")
     UsrImp=input()
-    if UsrImp=='Healing':
+    if UsrImp=='2':
         print('You convince a local medic to heal you for free.')
         print('Your Health is now filled!')
         HP=HPLimit
         Talk()
-    if UsrImp=='Pray':
+    if UsrImp=='3':
         print('You go to a church and pray.')
         print('Your mana is filled!')
         MP=MPLimit
         Talk()
-    if UsrImp=='Monsters':
+    if UsrImp=='1':
         print('You find a monster logger.')
         if XP==0:
             print('He wants your help finding monsters and gives you a gift to start off.')
@@ -149,7 +149,7 @@ def Talk():
         print('He will follow you and log all the monsters in the dungeon near the city you are in.')
         input()
         MonsterStats()
-    if UsrImp=='Back':
+    if UsrImp=='4':
         StarterTown()
 
 def LvlUp():
@@ -173,14 +173,65 @@ def LvlUp():
             XPtillLvl=125
             HPLimit=HPLimit+2
             MPLimit=MPLimit+2
+        if Lvl==2:
+            XPtillLvl=230
+            HPLimit=HPLimit+2
+            MPLimit=MPLimit+2
+        if Lvl==3:
+            XPtillLvl=305
+            HPLimit=HPLimit+3
+            MPLimit=MPLimit+4
+        if Lvl==4:
+            XPtillLvl=400
+            HPLimit=HPLimit+3
+            MPLimit=MPLimit+2
+        if Lvl==5:
+            XPtillLvl=525
+            HPLimit=HPLimit+2
+            MPLimit=MPLimit+4
+        if Lvl==6:
+            XPtillLvl=625
+            HPLimit=HPLimit+4
+            MPLimit=MPLimit+4
+        if Lvl==7:
+            XPtillLvl=750
+            HPLimit=HPLimit+3
+            MPLimit=MPLimit+2
+        if Lvl==8:
+            XPtillLvl=900
+            HPLimit=HPLimit+2
+            MPLimit=MPLimit+4
+        if Lvl==9:
+            XPtillLvl=1100
+            HPLimit=HPLimit+4
+            MPLimit=MPLimit+4
+        if Lvl==10:
+            XPtillLvl=1300
+            HPLimit=HPLimit+2
+            MPLimit=MPLimit+2
         print('Your HP increased to '+HPLimit)
         print('Your MP increased to '+MP)
         while Lvlup==True:
             print('What stat would you like to increase?')
-            print('Inteligence\nStrength\nAgility')
+            print('1-Inteligence\n2-Strength\n3-Agility')
             if Lvl==3 or Lvl>3:
-                print('Armor')
-            
+                print('4-Armor')
+            UsrImp=input()
+            if UsrImp=='1':
+                TrueInt=TrueInt+1
+                StatPoints=StatPoints-1
+            if UsrImp=='2':
+                TrueStr=TrueStr+1
+                StatPoints=StatPoints-1
+            if UsrImp=='3':
+                TrueAgl=TrueAgl+1
+                StatPoints=StatPoints-1
+            if Lvl==3 or Lvl>3:
+                if UsrImp=='4':
+                    TrueAmr=TrueAmr+1
+                    StatPoints=StatPoints-1
+            if StatPoints==0:
+                Lvlup=False
 
 def Stats():
     global GameZone
@@ -254,7 +305,7 @@ def Dungeon():
     Str=TrueStr+BonusStr
     Agl=TrueAgl+BonusAgl
     Amr=TrueAmr+BonusAmr
-    print('You have '+str(HP)+'/'+str(HPLimit)+' Health, and '+str(MP)+'/'+str(HPLimit)+' Mana.')
+    print('You have '+str(HP)+'/'+str(HPLimit)+' Health, and '+str(MP)+'/'+str(MPLimit)+' Mana.')
     print('Do you want to continue? Y/N')
     Usr=input()
     def Zone1Monster():
@@ -313,10 +364,10 @@ def Dungeon():
         print('HP: '+str(HP)+'/'+str(HPLimit))
         print('MP: '+str(MP)+'/'+str(MPLimit))
         print('Actions:')
-        print('Attack   Magic   Run')
+        print('1-Attack   2-Magic   3-Run')
         print('What would you like to do?')
         PlrAct=input()
-        if PlrAct=='Run':
+        if PlrAct=='3':
             HitChance=rand.randrange(1,101)
             if MonAgl==Agl*3 or MonAgl>Agl*3:
                 print('You failed to run from the monster.')
@@ -348,7 +399,7 @@ def Dungeon():
                                 if HitChance>50 and HitChance<101:
                                     print('You ran from the monster!')
                                     MonDefeat=True
-        if PlrAct=='Magic':
+        if PlrAct=='2':
             HitDmg=Int
             HitChance=rand.randrange(1,101)
             if MonInt==0:
@@ -362,7 +413,7 @@ def Dungeon():
                         HitDmg=HitDmg*2
             MonHP=MonHP-HitDmg
             MP=MP-2
-        if PlrAct=='Attack':
+        if PlrAct=='1':
             HitDmg=Str
             if MonAmr==0:
                 print('You hit the monster!')
@@ -446,43 +497,49 @@ def Zone1Shop():
         StarterTown()
     else:
         if UsrShp=='Basic Armor':
-            if '10G-Basic Armor: ARM+1' in ShopItems:
+            if '1- 10G-Basic Armor: ARM+1' in ShopItems:
                 if Gold==10 or Gold>10:
+                    Gold=Gold-10
                     ShopItems.remove('10G-Basic Armor: ARM+1')
                     Body='Basic Armor:ARM+1'
                     print('You now own Basic Armor!')
                 else:
                     print('You dont have enough gold for that.')
-        if UsrShp=='Better Armor':
-            if '20G-Better Armor: ARM+2' in ShopItems:
-                if Gold==10 or Gold>10:
-                    ShopItems.remove('20G-Better Armor: ARM+2')
-                    Body='Better Armor:ARM+2'
-                    print('You now own Better Armor!')
-                else:
-                    print('You dont have enough gold for that.')
         if UsrShp=='Basic Boots':
-            if '10G-Basic Boots: AGL+1'in ShopItems:
+            if '2- 10G-Basic Boots: AGL+1'in ShopItems:
                 if Gold==10 or Gold>10:
+                    Gold=Gold-10
                     ShopItems.remove('10G-Basic Boots: AGL+1')
                     Feet='Basic Boots:AGL+1'
                     print('You now own Basic Boots!')
                 else:
                     print('You dont have enough gold for that.')
         if UsrShp=='Lesser Pointy Hat':
-            if '10G-Lesser Pointy Hat: INT+1'in ShopItems:
+            if '3- 10G-Lesser Pointy Hat: INT+1'in ShopItems:
                 if Gold==10 or Gold>10:
+                    Gold=Gold-10
                     ShopItems.remove('10G-Lesser Pointy Hat: INT+1')
                     Head='Lesser Pointy Hat:INT+1'
                     print('You now own Lesser Pointy Hat!')
                 else:
                     print('You dont have enough gold for that.')
         if UsrShp=='Short Sword':
-            if '10G-Short Sword: STR+1'in ShopItems:
+            if '4- 10G-Short Sword: STR+1'in ShopItems:
                 if Gold==10 or Gold>10:
+                    Gold=Gold-10
                     ShopItems.remove('10G-Short Sword: STR+1')
                     Weapon='Short Sword:STR+1'
                     print('You now own Short Sword!')
+                    ShopItems.insert(3,'4- 20G-Basic Sword: STR+2')
+                else:
+                    print('You dont have enough gold for that.')
+        if UsrShp=='Short Sword':
+            if '4- 20G-Basic Sword: STR+2'in ShopItems:
+                if Gold==20 or Gold>20:
+                    Gold=Gold-20
+                    ShopItems.remove('20G-Basic Sword: STR+2')
+                    Weapon='Basic Sword:STR+2'
+                    print('You now own Basic Sword!')
                 else:
                     print('You dont have enough gold for that.')
         def BonusCheck():
@@ -551,7 +608,7 @@ def GameStart():
     global TrueInt
     global GameZone
     global XPtillLvl
-    ShopItems=['10G-Basic Armor: ARM+1','20G-Better Armor: ARM+2','10G-Basic Boots: AGL+1','10G-Lesser Pointy Hat: INT+1','10G-Short Sword: STR+1']
+    ShopItems=['1- 10G-Basic Armor: ARM+1','2- 10G-Basic Boots: AGL+1','3- 10G-Lesser Pointy Hat: INT+1','4- 10G-Short Sword: STR+1']
     TrueStr=1
     TrueAgl=1
     TrueInt=1
