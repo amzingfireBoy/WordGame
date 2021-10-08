@@ -1,4 +1,7 @@
 import random as rand
+
+from items import Item
+
 print('Welcome to Word RPG')
 print('You must type your actions, for example if you want to go to the Dungeon, type Dungeon, or if you want to Fight, type Fight.')
 print('(Remember, you have to type the exact word in quotes given in the choices, it is caps sensitive)')
@@ -474,7 +477,22 @@ def Dungeon():
     Dungeon()
 
 def Zone1Shop():
-    global ShopItems
+    """Shop for Zone 1. Open shop."""
+    # global ShopItems
+    ShopItems = {
+        1: Item("Basic Armor", 10, {
+            "ARM": 1
+        }),
+        2: Item("Basic Boots", 10, {
+            "AGL": 1
+        }),
+        3: Item("Lesser Pointy Hat", 10, {
+            "INT": 1
+        }),
+        4: Item("Short Sword", 10, {
+            "STR": 1
+        })
+    }
     global Inventory
     global Gold
     global BonusInt
@@ -489,94 +507,105 @@ def Zone1Shop():
     
     """)
     print('Welcome to the shop, \nyou can buy:')
-    print(*ShopItems,sep='\n')
+    print(**ShopItems,sep='\n')
     print("Type 'Back' to return town.")
     UsrShp=input("""What would you like to buy?
     """)
     if UsrShp=='Back':
         StarterTown()
     else:
-        if UsrShp=='Basic Armor':
-            if '1- 10G-Basic Armor: ARM+1' in ShopItems:
-                if Gold==10 or Gold>10:
-                    Gold=Gold-10
-                    ShopItems.remove('10G-Basic Armor: ARM+1')
-                    Body='Basic Armor:ARM+1'
-                    print('You now own Basic Armor!')
-                else:
-                    print('You dont have enough gold for that.')
-        if UsrShp=='Basic Boots':
-            if '2- 10G-Basic Boots: AGL+1'in ShopItems:
-                if Gold==10 or Gold>10:
-                    Gold=Gold-10
-                    ShopItems.remove('10G-Basic Boots: AGL+1')
-                    Feet='Basic Boots:AGL+1'
-                    print('You now own Basic Boots!')
-                else:
-                    print('You dont have enough gold for that.')
-        if UsrShp=='Lesser Pointy Hat':
-            if '3- 10G-Lesser Pointy Hat: INT+1'in ShopItems:
-                if Gold==10 or Gold>10:
-                    Gold=Gold-10
-                    ShopItems.remove('10G-Lesser Pointy Hat: INT+1')
-                    Head='Lesser Pointy Hat:INT+1'
-                    print('You now own Lesser Pointy Hat!')
-                else:
-                    print('You dont have enough gold for that.')
-        if UsrShp=='Short Sword':
-            if '4- 10G-Short Sword: STR+1'in ShopItems:
-                if Gold==10 or Gold>10:
-                    Gold=Gold-10
-                    ShopItems.remove('10G-Short Sword: STR+1')
-                    Weapon='Short Sword:STR+1'
-                    print('You now own Short Sword!')
-                    ShopItems.insert(3,'4- 20G-Basic Sword: STR+2')
-                else:
-                    print('You dont have enough gold for that.')
-        if UsrShp=='Short Sword':
-            if '4- 20G-Basic Sword: STR+2'in ShopItems:
-                if Gold==20 or Gold>20:
-                    Gold=Gold-20
-                    ShopItems.remove('20G-Basic Sword: STR+2')
-                    Weapon='Basic Sword:STR+2'
-                    print('You now own Basic Sword!')
-                else:
-                    print('You dont have enough gold for that.')
-        def BonusCheck():
-            if not Head=='':
-                BnsCal=Head.split(':')
-                del BnsCal[0]
-                BnsCal=''.join(BnsCal)
-                BnsCal=BnsCal.split('+')
-                del BnsCal[0]
-                BnsCal=''.join(BnsCal)
-                BonusInt=int(BnsCal)
-            if not Body=='':
-                BnsCal=Body.split(':')
-                del BnsCal[0]
-                BnsCal=''.join(BnsCal)
-                BnsCal=BnsCal.split('+')
-                del BnsCal[0]
-                BnsCal=''.join(BnsCal)
-                BonusAmr=int(BnsCal)
-            if not Feet=='':
-                BnsCal=Feet.split(':')
-                del BnsCal[0]
-                BnsCal=''.join(BnsCal)
-                BnsCal=BnsCal.split('+')
-                del BnsCal[0]
-                BnsCal=''.join(BnsCal)
-                BonusAgl=int(BnsCal)
-            if not Weapon=='':
-                BnsCal=Weapon.split(':')
-                del BnsCal[0]
-                BnsCal=''.join(BnsCal)
-                BnsCal=BnsCal.split('+')
-                del BnsCal[0]
-                BnsCal=''.join(BnsCal)
-                BonusStr=int(BnsCal)
+        item_to_buy = ShopItems.get(UsrShp, None)
+        if item_to_buy is None:
+            StarterTown() # TODO: could also restart shop
+        else:
+            if Gold >= item_to_buy.gold_value:
+                Gold -= item_to_buy.gold_value
+                ShopItems.pop(UsrShp)
+                Body = item_to_buy #TODO: Not quite right, need variation on equip target
+                print(f'You now own {item_to_buy.name}!')
+            else:
+                print('You dont have enough gold for that.')
+        # if UsrShp=='Basic Armor':
+        #     if '1- 10G-Basic Armor: ARM+1' in ShopItems:
+        #         if Gold==10 or Gold>10:
+        #             Gold=Gold-10
+        #             ShopItems.remove('10G-Basic Armor: ARM+1')
+        #             Body='Basic Armor:ARM+1'
+        #             print('You now own Basic Armor!')
+        #         else:
+        #             print('You dont have enough gold for that.')
+        # if UsrShp=='Basic Boots':
+        #     if '2- 10G-Basic Boots: AGL+1'in ShopItems:
+        #         if Gold==10 or Gold>10:
+        #             Gold=Gold-10
+        #             ShopItems.remove('10G-Basic Boots: AGL+1')
+        #             Feet='Basic Boots:AGL+1'
+        #             print('You now own Basic Boots!')
+        #         else:
+        #             print('You dont have enough gold for that.')
+        # if UsrShp=='Lesser Pointy Hat':
+        #     if '3- 10G-Lesser Pointy Hat: INT+1'in ShopItems:
+        #         if Gold==10 or Gold>10:
+        #             Gold=Gold-10
+        #             ShopItems.remove('10G-Lesser Pointy Hat: INT+1')
+        #             Head='Lesser Pointy Hat:INT+1'
+        #             print('You now own Lesser Pointy Hat!')
+        #         else:
+        #             print('You dont have enough gold for that.')
+        # if UsrShp=='Short Sword':
+        #     if '4- 10G-Short Sword: STR+1'in ShopItems:
+        #         if Gold==10 or Gold>10:
+        #             Gold=Gold-10
+        #             ShopItems.remove('10G-Short Sword: STR+1')
+        #             Weapon='Short Sword:STR+1'
+        #             print('You now own Short Sword!')
+        #             ShopItems.insert(3,'4- 20G-Basic Sword: STR+2')
+        #         else:
+        #             print('You dont have enough gold for that.')
+        # if UsrShp=='Short Sword':
+        #     if '4- 20G-Basic Sword: STR+2'in ShopItems:
+        #         if Gold==20 or Gold>20:
+        #             Gold=Gold-20
+        #             ShopItems.remove('20G-Basic Sword: STR+2')
+        #             Weapon='Basic Sword:STR+2'
+        #             print('You now own Basic Sword!')
+        #         else:
+        #             print('You dont have enough gold for that.')
+        # def BonusCheck():
+        #     if not Head=='':
+        #         BnsCal=Head.split(':')
+        #         del BnsCal[0]
+        #         BnsCal=''.join(BnsCal)
+        #         BnsCal=BnsCal.split('+')
+        #         del BnsCal[0]
+        #         BnsCal=''.join(BnsCal)
+        #         BonusInt=int(BnsCal)
+        #     if not Body=='':
+        #         BnsCal=Body.split(':')
+        #         del BnsCal[0]
+        #         BnsCal=''.join(BnsCal)
+        #         BnsCal=BnsCal.split('+')
+        #         del BnsCal[0]
+        #         BnsCal=''.join(BnsCal)
+        #         BonusAmr=int(BnsCal)
+        #     if not Feet=='':
+        #         BnsCal=Feet.split(':')
+        #         del BnsCal[0]
+        #         BnsCal=''.join(BnsCal)
+        #         BnsCal=BnsCal.split('+')
+        #         del BnsCal[0]
+        #         BnsCal=''.join(BnsCal)
+        #         BonusAgl=int(BnsCal)
+        #     if not Weapon=='':
+        #         BnsCal=Weapon.split(':')
+        #         del BnsCal[0]
+        #         BnsCal=''.join(BnsCal)
+        #         BnsCal=BnsCal.split('+')
+        #         del BnsCal[0]
+        #         BnsCal=''.join(BnsCal)
+        #         BonusStr=int(BnsCal)
         
-        BonusCheck()
+        # BonusCheck()
         Zone1Shop()
 
 def StarterTown():
@@ -602,13 +631,13 @@ def StarterTown():
         Talk()
 
 def GameStart():
-    global ShopItems
+    # global ShopItems
     global TrueStr
     global TrueAgl
     global TrueInt
     global GameZone
     global XPtillLvl
-    ShopItems=['1- 10G-Basic Armor: ARM+1','2- 10G-Basic Boots: AGL+1','3- 10G-Lesser Pointy Hat: INT+1','4- 10G-Short Sword: STR+1']
+    # ShopItems=['1- 10G-Basic Armor: ARM+1','2- 10G-Basic Boots: AGL+1','3- 10G-Lesser Pointy Hat: INT+1','4- 10G-Short Sword: STR+1']
     TrueStr=1
     TrueAgl=1
     TrueInt=1
